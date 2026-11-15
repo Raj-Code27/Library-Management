@@ -1,0 +1,29 @@
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Logs
+*.log
+
+# Build & compiled output
+out/
+bin/
+
+# Environment and credentials
+.env
+*.pem
+*.key
+jenkins_home/
+
+# Ansible
+ansible/*.retry
+*.retry
+/library-api-deploy/
+library-api-deploy/
