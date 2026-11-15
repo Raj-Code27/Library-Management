@@ -1,0 +1,7 @@
+---
+- name: Deploy and Manage Library Management REST API on Local Host
+  hosts: local
+  gather_facts: true
+  roles:
+    - library
+

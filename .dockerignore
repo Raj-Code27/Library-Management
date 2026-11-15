@@ -1,0 +1,17 @@
+.git/
+.gradle/
+.idea/
+.vscode/
+src/
+ansible/
+k8s/
+jenkins/
+scripts/
+docs/
+*.md
+Jenkinsfile
+.DS_Store
+build/*
+!build/libs/
+!build/libs/*.jar
+

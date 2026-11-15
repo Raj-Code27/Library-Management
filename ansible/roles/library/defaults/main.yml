@@ -1,0 +1,6 @@
+app_name: library-api
+app_port: 8080
+app_directory: "{{ ansible_env.HOME }}/library-api-deploy"
+jar_source: "{{ playbook_dir }}/../build/libs/library-management-api-1.0.0.jar"
+jar_dest_name: library-api.jar
+

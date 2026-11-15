@@ -1,0 +1,57 @@
+---
+- name: Assert executable JAR exists
+  ansible.builtin.stat:
+    path: "{{ jar_source }}"
+  register: jar_stat
+
+- name: Validate that JAR is built
+  ansible.builtin.assert:
+    that:
+      - jar_stat.stat.exists
+    fail_msg: "Source JAR {{ jar_source }} not found. Run ./gradlew build first."
+
+- name: Create application directory
+  ansible.builtin.file:
+    path: "{{ app_directory }}"
+    state: directory
+    mode: '0755'
+
+- name: Create logs directory
+  ansible.builtin.file:
+    path: "{{ app_directory }}/logs"
+    state: directory
+    mode: '0755'
+
+- name: Copy executable JAR to application directory
+  ansible.builtin.copy:
+    src: "{{ jar_source }}"
+    dest: "{{ app_directory }}/{{ jar_dest_name }}"
+    mode: '0755'
+  notify: Restart Library API
+
+- name: Template run-app.sh control script
+  ansible.builtin.template:
+    src: run-app.sh.j2
+    dest: "{{ app_directory }}/run-app.sh"
+    mode: '0755'
+  notify: Restart Library API
+
+- name: Flush handlers to ensure app starts before health verification
+  ansible.builtin.meta: flush_handlers
+
+- name: Wait for application port to open
+  ansible.builtin.wait_for:
+    port: "{{ app_port }}"
+    delay: 3
+    timeout: 30
+
+- name: Check application health endpoint
+  ansible.builtin.uri:
+    url: "http://localhost:{{ app_port }}/actuator/health"
+    status_code: 200
+    return_content: true
+  register: health_check
+  retries: 5
+  delay: 2
+  until: health_check.status == 200
+

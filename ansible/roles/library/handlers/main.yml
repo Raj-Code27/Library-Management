@@ -1,0 +1,5 @@
+---
+- name: Restart Library API
+  ansible.builtin.command: "{{ app_directory }}/run-app.sh restart"
+  changed_when: true
+
